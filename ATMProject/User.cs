@@ -1,12 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace ATMProject
+﻿namespace ATMProject
 {
-	internal class User
+	class User
 	{
+		public int UserId { get; set; }
+		public string Name { get; set; }
+		public decimal Balance { get; set; }
+		public PlanType Plan { get; set; }
+
+		public User(int userId, string name, decimal balance, PlanType plan = PlanType.Standard)
+		{
+			UserId = userId;
+			Name = name;
+			Balance = balance;
+			Plan = plan;
+		}
+	}
+
+	enum PlanType
+	{
+		Standard,
+		Premium,
+		Platinum
 	}
 }
