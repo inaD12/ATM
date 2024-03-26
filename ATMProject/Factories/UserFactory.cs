@@ -2,19 +2,19 @@
 {
 	internal class UserFactory : IUserFactory
 	{
-		public User CreateStandardUser(int userId, string name, decimal balance)
+		public User CreateStandardUser(string name, decimal balance)
 		{
-			return new User(userId, name, balance, PlanType.Standard);
+			return new User(name, balance, PlanType.Standard);
 		}
 
-		public User CreatePremiumUser(int userId, string name, decimal balance)
+		public User CreatePremiumUser(string name, decimal balance)
 		{
-			return new User(userId, name, balance, PlanType.Premium);
+			return new User(name, balance, PlanType.Premium);
 		}
 
-		public User CreatePlatinumUser(int userId, string name, decimal balance)
+		public User CreatePlatinumUser(string name, decimal balance)
 		{
-			return new User(userId, name, balance, PlanType.Platinum);
+			return new User(name, balance, PlanType.Platinum);
 		}
 	}
 }

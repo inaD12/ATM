@@ -2,8 +2,8 @@
 {
 	internal interface IUserFactory
 	{
-		User CreatePlatinumUser(int userId, string name, decimal balance);
-		User CreatePremiumUser(int userId, string name, decimal balance);
-		User CreateStandardUser(int userId, string name, decimal balance);
+		User CreatePlatinumUser(string name, decimal balance);
+		User CreatePremiumUser(string name, decimal balance);
+		User CreateStandardUser(string name, decimal balance);
 	}
 }
