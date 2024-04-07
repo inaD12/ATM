@@ -1,6 +1,6 @@
 ﻿namespace ATMProject.Factories
 {
-	internal class UserManager
+	internal class UserManager : IUserManager
 	{
 		private IUserFactory _userFactory;
 
@@ -9,9 +9,9 @@
 			_userFactory = userFactory;
 		}
 
-		public void AddUser(string name, decimal balance)
+		public User CreateUser(string name, decimal balance)
 		{
-			User user = _userFactory.CreateStandardUser(name, balance);
+			return _userFactory.CreateStandardUser(name, balance);
 		}
 
 		public void UpdatePlan(User user)
@@ -26,8 +26,23 @@
 
 		public void ApplyMonthlyInterestBonus(User user)
 		{
-				decimal interest = user.Balance * 0.01m;
-				user.Balance += interest;
+			decimal interest = user.Balance * 0.01m;
+			user.Balance += interest;
+		}
+
+		public void WithdrawMoney(User user, decimal amount)
+		{
+			user.Balance -= amount;
+		}
+
+		public void DepositMoney(User user, decimal amount)
+		{
+			user.Balance += amount;
+		}
+
+		public decimal ViewBalance(User user)
+		{
+			return user.Balance;
 		}
 	}
 }

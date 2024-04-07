@@ -2,7 +2,7 @@
 
 namespace ATMProject
 {
-	class User
+	public class User
 	{
 		public string UserId { get; set; }
 		public string Name { get; set; }
@@ -19,7 +19,7 @@ namespace ATMProject
 		}
 	}
 
-	enum PlanType
+	public enum PlanType
 	{
 		Standard,
 		Premium,
