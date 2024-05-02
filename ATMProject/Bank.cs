@@ -1,21 +1,22 @@
 ﻿using ATMProject.Factories;
-using System.Collections.Generic;
 
 namespace ATMProject
 {
 	public class Bank
 	{
 		private readonly IUserManager _userManager;
+		private readonly IUserRepository _userRepository;
 
-		private Bank(IUserManager userManager)
+		private Bank(IUserManager userManager, IUserRepository userRepository)
 		{
 			_userManager = userManager;
+			_userRepository = userRepository;
 		}
 
 		private static Bank _instance;
 		private static readonly object _lock = new object();
 
-		public static Bank GetInstance(IUserManager userManager)
+		public static Bank GetInstance(IUserManager userManager, IUserRepository userRepository)
 		{
 			if (_instance == null)
 			{
@@ -23,14 +24,13 @@ namespace ATMProject
 				{
 					if (_instance == null)
 					{
-						_instance = new Bank(userManager);
+						_instance = new Bank(userManager, userRepository);
 					}
 				}
 			}
 			return _instance;
 		}
 
-		private List<User> _users = new List<User>();
 
 	}
 }

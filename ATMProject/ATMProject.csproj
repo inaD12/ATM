@@ -46,6 +46,8 @@
     <Compile Include="Bank.cs" />
     <Compile Include="Factories\IUserFactory.cs" />
     <Compile Include="Factories\UserFactory.cs" />
+    <Compile Include="IUserRepository.cs" />
+    <Compile Include="UserRepository.cs" />
     <Compile Include="IUserManager.cs" />
     <Compile Include="UserManager.cs" />
     <Compile Include="Program.cs" />
