@@ -11,14 +11,23 @@ namespace ATMProject.Factories
 
 		public void AddUser(User user)
 		{
-			if (!Users.Contains(user))
+			if (Users.Any(usr => usr.Name == user.Name))
 			{
-				Users.Add(user);
+				throw new System.ArgumentException("A user with this name already exists!");
 			}
+
+			Users.Add(user);
 		}
 
-		public void RenoveUser(User user)
+		public void RemoveUser(string name)
 		{
+			User user = FindUserByName(name);
+
+			if (user == null)
+			{
+				throw new System.ArgumentException("A user with this name doesn't exist!");
+			}
+
 			Users.Remove(user);
 		}
 
@@ -27,7 +36,7 @@ namespace ATMProject.Factories
 			return Users.FirstOrDefault(user => user.Name == name);
 		}
 
-		public User FindById(string id)
+		public User FindUserById(string id)
 		{
 			return Users.FirstOrDefault(user => user.UserId == id);
 		}

@@ -1,13 +1,20 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.Extensions.DependencyInjection;
 using System;
-using System.Reflection;
+using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 
 namespace ATMProject
 {
 	public class CommandManager
 	{
-		public static Dictionary<string, Type> commands = new Dictionary<string, Type>();
+		private Dictionary<string, Type> _commands = new Dictionary<string, Type>();
+		private readonly IServiceProvider _serviceProvider;
+
+		public CommandManager(IServiceProvider serviceProvider)
+		{
+			_serviceProvider = serviceProvider;
+		}
 
 		public void Scan()
 		{
@@ -21,7 +28,7 @@ namespace ATMProject
 
 			List<string> parameters = wordList.Skip(1).ToList();
 
-			ExecuteCommand(command, parameters);
+			ExecuteCommand(command, parameters, _serviceProvider);
 		}
 
 		public void DiscoverCommands()
@@ -31,22 +38,42 @@ namespace ATMProject
 			foreach (var type in commandTypes)
 			{
 				string commandName = $"{type.Name}";
-				commands[commandName] = type;
+				_commands[commandName] = type;
 			}
 		}
 
-		public void ExecuteCommand(string commandName, List<string> parameters)
+		private void ExecuteCommand(string commandName, List<string> parameters, IServiceProvider serviceProvider)
 		{
-			if (commands.TryGetValue($"{commandName}Command", out Type commandType))
+			if (_commands.TryGetValue($"{commandName}Command", out Type commandType))
 			{
-				ICommand command = Activator.CreateInstance(commandType) as ICommand;
-				if (command != null)
+				if (typeof(ICommand).IsAssignableFrom(commandType))
 				{
-					command.Execute(parameters);
+					var dependencies = new List<object>();
+					foreach (var constructorParam in commandType.GetConstructors()[0].GetParameters())
+					{
+						dependencies.Add(serviceProvider.GetRequiredService(constructorParam.ParameterType));
+					}
+
+					ICommand command = Activator.CreateInstance(commandType, dependencies.ToArray()) as ICommand;
+					if (command != null)
+					{
+						try
+						{
+							command.Execute(parameters);
+						}
+						catch (Exception ex)
+						{
+							Console.WriteLine(ex.Message);
+						}
+					}
+					else
+					{
+						Console.WriteLine($"Failed to instantiate command: {commandName}");
+					}
 				}
 				else
 				{
-					Console.WriteLine($"Failed to instantiate command: {commandName}");
+					Console.WriteLine($"Type {commandType} does not implement ICommand interface.");
 				}
 			}
 			else

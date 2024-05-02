@@ -7,8 +7,8 @@ namespace ATMProject.Factories
 		IEnumerable<User> GetUsers { get; }
 
 		void AddUser(User user);
-		void RenoveUser(User user);
+		void RemoveUser(string name);
 		User FindUserByName(string name);
-		User FindById(string id);
+		User FindUserById(string id);
 	}
 }
