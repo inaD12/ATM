@@ -32,11 +32,25 @@
 
 		public void WithdrawMoney(User user, decimal amount)
 		{
+			if(amount <= 0)
+			{
+				throw new System.ArgumentException("You can't withdraw an amount equal to or lower than zero!");
+			}
+			if (user.Balance - amount < 0)
+			{
+				throw new System.InvalidOperationException($"User '{user.Name}' only has a balance of {user.Balance}!");
+			}
+
 			user.Balance -= amount;
+			
 		}
 
 		public void DepositMoney(User user, decimal amount)
 		{
+			if (amount <= 0)
+			{
+				throw new System.ArgumentException("You can't deposit an amount equal to or lower than zero!");
+			}
 			user.Balance += amount;
 		}
 

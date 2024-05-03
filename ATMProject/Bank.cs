@@ -1,5 +1,4 @@
 ﻿using ATMProject.Factories;
-using System.Collections;
 using System.Collections.Generic;
 
 namespace ATMProject
@@ -46,6 +45,41 @@ namespace ATMProject
 		public void RemoveUser(string name)
 		{
 			_userRepository.RemoveUser(name);
+		}
+
+		public void WithdrawMoney(string name, decimal amount)
+		{
+			User user = GetUserByName(name);
+
+			_userManager.WithdrawMoney(user, amount);
+		}
+
+		public decimal ViewBalance(string name)
+		{
+			User user = GetUserByName(name);
+
+			return _userManager.ViewBalance(user);
+		}
+
+		public void DepositMoney(string name, decimal amount)
+		{
+			User user = GetUserByName(name);
+
+			_userManager.DepositMoney(user, amount);
+		}
+
+		public void TransferMoney(string nameFrom, string nameTo, decimal amount)
+		{
+			User userFrom = GetUserByName(nameFrom);
+			User userTo = GetUserByName(nameTo);
+
+			_userManager.WithdrawMoney(userFrom, amount);
+			_userManager.DepositMoney(userTo, amount);
+		}
+
+		private User GetUserByName(string name)
+		{
+			return _userRepository.FindUserByName(name);
 		}
 	}
 }

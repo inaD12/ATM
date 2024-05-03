@@ -3,10 +3,11 @@ using System.Collections.Generic;
 
 namespace ATMProject.Commands
 {
-	internal class CreateUserCommand : ICommand
+	internal class WithdrawCommand : ICommand
 	{
 		private readonly Bank _bank;
-        public CreateUserCommand(Bank bank)
+
+        public WithdrawCommand(Bank bank)
         {
             _bank = bank;
         }
@@ -19,8 +20,9 @@ namespace ATMProject.Commands
 				throw new ArgumentException("Invalid parameters!");
 			}
 
-			_bank.CreateUser(parameters[0], amount);
-            Console.WriteLine($"User '{parameters[0]}' Successfully Created!");
+			_bank.WithdrawMoney(parameters[0], amount);
+
+            Console.WriteLine($"{amount} has successfully been withdrawn from {parameters[0]}'s wallet!");
         }
 	}
 }

@@ -13,6 +13,11 @@ namespace ATMProject.Commands
         }
         public void Execute(List<string> parameters)
 		{
+			if (parameters.Count != 1)
+			{
+				throw new ArgumentException("Invalid parameters!");
+			}
+
 			_bank.RemoveUser(parameters[0]);
 
             Console.WriteLine($"User {parameters[0]} successfully deleted!");

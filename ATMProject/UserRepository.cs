@@ -13,7 +13,7 @@ namespace ATMProject.Factories
 		{
 			if (Users.Any(usr => usr.Name == user.Name))
 			{
-				throw new System.ArgumentException("A user with this name already exists!");
+				throw new System.ArgumentException($"A user with the name '{user.Name}' already exists!");
 			}
 
 			Users.Add(user);
@@ -23,22 +23,31 @@ namespace ATMProject.Factories
 		{
 			User user = FindUserByName(name);
 
-			if (user == null)
-			{
-				throw new System.ArgumentException("A user with this name doesn't exist!");
-			}
-
 			Users.Remove(user);
 		}
 
 		public User FindUserByName(string name)
 		{
-			return Users.FirstOrDefault(user => user.Name == name);
+			User user = Users.FirstOrDefault(usr => usr.Name == name);
+
+			if (user == null)
+			{
+				throw new System.ArgumentException($"A user with the name '{name}' doesn't exist!");
+			}
+
+			return user;
 		}
 
 		public User FindUserById(string id)
 		{
-			return Users.FirstOrDefault(user => user.UserId == id);
+			User user = Users.FirstOrDefault(usr => usr.UserId == id);
+
+			if (user == null)
+			{
+				throw new System.ArgumentException($"A user with the id '{id}' doesn't exist!");
+			}
+
+			return user;
 		}
 	}
 }
