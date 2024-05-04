@@ -14,6 +14,9 @@ namespace ATMProject.Commands
 			services.AddTransient<IUserManager, UserManager>();
 			services.AddTransient<IUserFactory, UserFactory>();
 			services.AddTransient<CommandManager>();
+			services.AddTransient<IWithdrawalTaxManager, WithdrawalTaxManager>();
+			services.AddTransient<ITaxCalculator, TaxCalculator>();
+			services.AddTransient<ITaxPlanFactory, TaxPlanFactory>();
 
 
 			return services.BuildServiceProvider();

@@ -20,9 +20,9 @@ namespace ATMProject.Commands
 				throw new ArgumentException("Invalid parameters!");
 			}
 
-			_bank.TransferMoney(parameters[0], parameters[1], amount);
+			decimal tax = _bank.TransferMoney(parameters[0], parameters[1], amount);
 
-            Console.WriteLine($"{amount} has been transfered from '{parameters[0]}' to '{parameters[1]}'!");
+            Console.WriteLine($"{amount} has been transfered from '{parameters[0]}' to '{parameters[1]}' and a tax of {tax} was taken!");
         }
 	}
 }

@@ -7,11 +7,13 @@ namespace ATMProject
 	{
 		private readonly IUserManager _userManager;
 		private readonly IUserRepository _userRepository;
+		private readonly IWithdrawalTaxManager _withdrawalTaxManager;
 
-		public Bank(IUserManager userManager, IUserRepository userRepository)
+		public Bank(IUserManager userManager, IUserRepository userRepository, IWithdrawalTaxManager withdrawalTaxManager)
 		{
 			_userManager = userManager;
 			_userRepository = userRepository;
+			_withdrawalTaxManager = withdrawalTaxManager;
 		}
 
 		//private static Bank _instance;
@@ -47,11 +49,15 @@ namespace ATMProject
 			_userRepository.RemoveUser(name);
 		}
 
-		public void WithdrawMoney(string name, decimal amount)
+		public decimal WithdrawMoney(string name, decimal requestedAmount)
 		{
 			User user = GetUserByName(name);
 
-			_userManager.WithdrawMoney(user, amount);
+			decimal tax = _withdrawalTaxManager.CalculateTax(requestedAmount);
+
+			_userManager.WithdrawMoney(user, requestedAmount + tax);
+
+			return tax;
 		}
 
 		public decimal ViewBalance(string name)
@@ -68,13 +74,12 @@ namespace ATMProject
 			_userManager.DepositMoney(user, amount);
 		}
 
-		public void TransferMoney(string nameFrom, string nameTo, decimal amount)
+		public decimal TransferMoney(string nameFrom, string nameTo, decimal amount)
 		{
-			User userFrom = GetUserByName(nameFrom);
-			User userTo = GetUserByName(nameTo);
+			decimal tax = WithdrawMoney(nameFrom, amount);
+			DepositMoney(nameFrom, amount);
 
-			_userManager.WithdrawMoney(userFrom, amount);
-			_userManager.DepositMoney(userTo, amount);
+			return tax;
 		}
 
 		private User GetUserByName(string name)

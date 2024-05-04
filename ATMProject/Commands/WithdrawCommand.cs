@@ -20,9 +20,9 @@ namespace ATMProject.Commands
 				throw new ArgumentException("Invalid parameters!");
 			}
 
-			_bank.WithdrawMoney(parameters[0], amount);
+			decimal tax = _bank.WithdrawMoney(parameters[0], amount);
 
-            Console.WriteLine($"{amount} has successfully been withdrawn from {parameters[0]}'s wallet!");
+            Console.WriteLine($"{amount} has successfully been withdrawn from {parameters[0]}'s wallet with the added tax of {tax}!");
         }
 	}
 }
