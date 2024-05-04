@@ -22,6 +22,8 @@
 				user.Plan = PlanType.Premium;
 			else
 				user.Plan = PlanType.Platinum;
+
+			user.WithdrawsForThisMonth = 0;
 		}
 
 		public void ApplyMonthlyInterestBonus(User user)
@@ -42,7 +44,7 @@
 			}
 
 			user.Balance -= amount;
-			
+			user.WithdrawsForThisMonth++;
 		}
 
 		public void DepositMoney(User user, decimal amount)

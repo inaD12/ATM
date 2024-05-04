@@ -82,6 +82,13 @@ namespace ATMProject
 			return tax;
 		}
 
+		public (PlanType,int) CheckPlanType(string name)
+		{
+			User user = GetUserByName(name);
+
+			return (user.Plan, user.WithdrawsForThisMonth);
+		}
+
 		private User GetUserByName(string name)
 		{
 			return _userRepository.FindUserByName(name);
