@@ -2,18 +2,19 @@
 
 namespace ATMProject.Jobs
 {
-	internal class MonthlyInterestJob
+	public class MonthlyJob
 	{
         private readonly Bank _bank;
-        public MonthlyInterestJob(Bank bank)
+        public MonthlyJob(Bank bank)
         {
             _bank = bank;
         }
 
         public void Execute()
         {
-            Console.WriteLine("Monthly interest job executed!");
             _bank.ApplyMonthlyInterest();
+            _bank.UpdatePlans();
+            Console.WriteLine("Monthly job executed!");
         }
     }
 }

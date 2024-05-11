@@ -242,7 +242,7 @@
     <Compile Include="Factories\UserFactory.cs" />
     <Compile Include="Interfaces\ICommand.cs" />
     <Compile Include="Interfaces\IUserRepository.cs" />
-    <Compile Include="Jobs\MonthlyInterestJob.cs" />
+    <Compile Include="Jobs\MonthlyJob.cs" />
     <Compile Include="TaxCalculators\ITaxCalculator.cs" />
     <Compile Include="TaxCalculators\IWithdrawalTaxManager.cs" />
     <Compile Include="TaxCalculators\TaxCalculator.cs" />

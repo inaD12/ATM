@@ -1,4 +1,5 @@
 ﻿using ATMProject.Factories;
+using System;
 using System.Collections.Generic;
 
 namespace ATMProject
@@ -96,12 +97,31 @@ namespace ATMProject
 
 		public void ApplyMonthlyInterest()
 		{
+			UserAction action = _userManager.ApplyMonthlyInterestBonus;
+
+			DoSomethingToAllUsers(action);
+		}
+
+		public void UpdatePlans()
+		{
+			UserAction action = _userManager.UpdatePlan;
+
+			DoSomethingToAllUsers(action);
+		}
+
+		private void DoSomethingToAllUsers(UserAction action)
+		{
 			IEnumerable<User> users = _userRepository.GetUsers;
 
 			foreach (User user in users)
 			{
-				_userManager.ApplyMonthlyInterestBonus(user);
+				if (action != null)
+				{
+					action(user);
+				}
 			}
 		}
+
+		private delegate void UserAction(User user);
 	}
-}
+} 

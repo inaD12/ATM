@@ -16,9 +16,9 @@ namespace ATMProject
 
 			CommandManager commandManager = serviceProvider.GetService<CommandManager>();
 
-			MonthlyInterestJob ser = serviceProvider.GetRequiredService<MonthlyInterestJob>();
+			MonthlyJob ser = serviceProvider.GetRequiredService<MonthlyJob>();
 
-			RecurringJob.AddOrUpdate("MonthlyInterestJob",() => ser.Execute(), Cron.Monthly);
+			RecurringJob.AddOrUpdate("MonthlyJob",() => ser.Execute(), Cron.Monthly);
 
 			commandManager.DiscoverCommands();
 

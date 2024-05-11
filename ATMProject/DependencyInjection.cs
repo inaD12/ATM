@@ -20,7 +20,7 @@ namespace ATMProject.Commands
 			services.AddTransient<IWithdrawalTaxManager, WithdrawalTaxManager>();
 			services.AddTransient<ITaxCalculator, TaxCalculator>();
 			services.AddTransient<ITaxPlanFactory, TaxPlanFactory>();
-			services.AddTransient<MonthlyInterestJob>();
+			services.AddTransient<MonthlyJob>();
 
 			services.AddHangfire(x => x
 			.SetDataCompatibilityLevel(CompatibilityLevel.Version_180)
