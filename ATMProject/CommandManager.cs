@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -44,41 +43,49 @@ namespace ATMProject
 
 		private void ExecuteCommand(string commandName, List<string> parameters, IServiceProvider serviceProvider)
 		{
-			if (_commands.TryGetValue($"{commandName}Command", out Type commandType))
+			if (string.IsNullOrEmpty(commandName))
 			{
-				if (typeof(ICommand).IsAssignableFrom(commandType))
-				{
-					var dependencies = new List<object>();
-					foreach (var constructorParam in commandType.GetConstructors()[0].GetParameters())
-					{
-						dependencies.Add(serviceProvider.GetRequiredService(constructorParam.ParameterType));
-					}
-
-					ICommand command = Activator.CreateInstance(commandType, dependencies.ToArray()) as ICommand;
-					if (command != null)
-					{
-						try
-						{
-							command.Execute(parameters);
-						}
-						catch (Exception ex)
-						{
-							Console.WriteLine(ex.Message);
-						}
-					}
-					else
-					{
-						Console.WriteLine($"Failed to instantiate command: {commandName}");
-					}
-				}
-				else
-				{
-					Console.WriteLine($"Type {commandType} does not implement ICommand interface.");
-				}
+				Console.WriteLine("Command name cannot be null or empty.");
+				return;
 			}
-			else
+
+			if (!_commands.TryGetValue($"{commandName}Command", out Type commandType))
 			{
 				Console.WriteLine($"Command not found: {commandName}");
+				return;
+			}
+
+			if (!typeof(ICommand).IsAssignableFrom(commandType))
+			{
+				Console.WriteLine($"Type {commandType} does not implement ICommand interface.");
+				return;
+			}
+
+			var constructor = commandType.GetConstructors().FirstOrDefault();
+			if (constructor == null)
+			{
+				Console.WriteLine($"Command {commandName} does not have a public constructor.");
+				return;
+			}
+
+			var dependencies = constructor.GetParameters()
+										   .Select(param => serviceProvider.GetService(param.ParameterType))
+										   .ToArray();
+
+			var command = Activator.CreateInstance(commandType, dependencies) as ICommand;
+			if (command == null)
+			{
+				Console.WriteLine($"Failed to instantiate command: {commandName}");
+				return;
+			}
+
+			try
+			{
+				command.Execute(parameters);
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine($"Error executing command {commandName}: {ex.Message}");
 			}
 		}
 	}

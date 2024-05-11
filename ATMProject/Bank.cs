@@ -93,5 +93,15 @@ namespace ATMProject
 		{
 			return _userRepository.FindUserByName(name);
 		}
+
+		public void ApplyMonthlyInterest()
+		{
+			IEnumerable<User> users = _userRepository.GetUsers;
+
+			foreach (User user in users)
+			{
+				_userManager.ApplyMonthlyInterestBonus(user);
+			}
+		}
 	}
 }

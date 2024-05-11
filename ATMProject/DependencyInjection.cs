@@ -1,4 +1,7 @@
 ﻿using ATMProject.Factories;
+using ATMProject.Jobs;
+using Hangfire;
+using Hangfire.MemoryStorage;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace ATMProject.Commands
@@ -17,7 +20,16 @@ namespace ATMProject.Commands
 			services.AddTransient<IWithdrawalTaxManager, WithdrawalTaxManager>();
 			services.AddTransient<ITaxCalculator, TaxCalculator>();
 			services.AddTransient<ITaxPlanFactory, TaxPlanFactory>();
+			services.AddTransient<MonthlyInterestJob>();
 
+			services.AddHangfire(x => x
+			.SetDataCompatibilityLevel(CompatibilityLevel.Version_180)
+			.UseSimpleAssemblyNameTypeSerializer()
+			.UseRecommendedSerializerSettings()
+			.UseMemoryStorage()
+			);
+
+			services.AddHangfireServer();
 
 			return services.BuildServiceProvider();
 		}
