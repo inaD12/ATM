@@ -15,9 +15,15 @@ namespace ATMProject
 			_serviceProvider = serviceProvider;
 		}
 
-		public void Scan()
+		public void ScanAndHandleCommands()
 		{
-			string input = Console.ReadLine();
+            Console.WriteLine("");
+
+            string input = Console.ReadLine();
+
+			Console.Clear();
+
+			CommandPrinter.PrintAllCommands();
 
 			string[] words = input.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
 

@@ -16,15 +16,17 @@ namespace ATMProject
 
 			CommandManager commandManager = serviceProvider.GetService<CommandManager>();
 
-			MonthlyJob ser = serviceProvider.GetRequiredService<MonthlyJob>();
+			MonthlyJob ser = serviceProvider.GetService<MonthlyJob>();
 
 			RecurringJob.AddOrUpdate("MonthlyJob",() => ser.Execute(), Cron.Monthly);
 
 			commandManager.DiscoverCommands();
 
+			CommandPrinter.PrintAllCommands();
+
 			while (true)
 			{
-				commandManager.Scan();
+				commandManager.ScanAndHandleCommands();
 			}
 		}
 	}
