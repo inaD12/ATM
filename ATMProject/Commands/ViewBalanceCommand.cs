@@ -5,9 +5,9 @@ namespace ATMProject.Commands
 {
 	internal class ViewBalanceCommand : ICommand
 	{
-		private readonly Bank _bank;
+		private readonly IBank _bank;
 
-		public ViewBalanceCommand(Bank bank)
+		public ViewBalanceCommand(IBank bank)
 		{
 			_bank = bank;
 		}

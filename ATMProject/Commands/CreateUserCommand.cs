@@ -5,8 +5,8 @@ namespace ATMProject.Commands
 {
 	internal class CreateUserCommand : ICommand
 	{
-		private readonly Bank _bank;
-        public CreateUserCommand(Bank bank)
+		private readonly IBank _bank;
+        public CreateUserCommand(IBank bank)
         {
             _bank = bank;
         }

@@ -1,10 +1,9 @@
 ﻿using ATMProject.Factories;
-using System;
 using System.Collections.Generic;
 
 namespace ATMProject
 {
-	public class Bank
+	public class Bank : IBank
 	{
 		private readonly IUserManager _userManager;
 		private readonly IUserRepository _userRepository;
@@ -16,24 +15,6 @@ namespace ATMProject
 			_userRepository = userRepository;
 			_withdrawalTaxManager = withdrawalTaxManager;
 		}
-
-		//private static Bank _instance;
-		//private static readonly object _lock = new object();
-
-		//public static Bank GetInstance(IUserManager userManager, IUserRepository userRepository)
-		//{
-		//	if (_instance == null)
-		//	{
-		//		lock (_lock)
-		//		{
-		//			if (_instance == null)
-		//			{
-		//				_instance = new Bank(userManager, userRepository);
-		//			}
-		//		}
-		//	}
-		//	return _instance;
-		//}
 
 		public void CreateUser(string name, decimal balance)
 		{
@@ -83,16 +64,11 @@ namespace ATMProject
 			return tax;
 		}
 
-		public (PlanType,int) CheckPlanType(string name)
+		public (PlanType, int) CheckPlanType(string name)
 		{
 			User user = GetUserByName(name);
 
 			return (user.Plan, user.WithdrawsForThisMonth);
-		}
-
-		private User GetUserByName(string name)
-		{
-			return _userRepository.FindUserByName(name);
 		}
 
 		public void ApplyMonthlyInterest()
@@ -107,6 +83,11 @@ namespace ATMProject
 			UserAction action = _userManager.UpdatePlan;
 
 			DoSomethingToAllUsers(action);
+		}
+
+		private User GetUserByName(string name)
+		{
+			return _userRepository.FindUserByName(name);
 		}
 
 		private void DoSomethingToAllUsers(UserAction action)

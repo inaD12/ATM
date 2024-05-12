@@ -15,7 +15,7 @@ namespace ATMProject
 			_serviceProvider = serviceProvider;
 		}
 
-		public void ScanAndHandleCommands()
+		public void Scan()
 		{
             Console.WriteLine("");
 
@@ -25,15 +25,7 @@ namespace ATMProject
 
 			CommandPrinter.PrintAllCommands();
 
-			string[] words = input.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-
-			List<string> wordList = new List<string>(words);
-
-			string command = words[0];
-
-			List<string> parameters = wordList.Skip(1).ToList();
-
-			ExecuteCommand(command, parameters, _serviceProvider);
+			HandleCommand(input);
 		}
 
 		public void DiscoverCommands()
@@ -45,6 +37,19 @@ namespace ATMProject
 				string commandName = $"{type.Name}";
 				_commands[commandName] = type;
 			}
+		}
+
+		private void HandleCommand(string input)
+		{
+			string[] words = input.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+
+			List<string> wordList = new List<string>(words);
+
+			string command = words[0];
+
+			List<string> parameters = wordList.Skip(1).ToList();
+
+			ExecuteCommand(command, parameters, _serviceProvider);
 		}
 
 		private void ExecuteCommand(string commandName, List<string> parameters, IServiceProvider serviceProvider)

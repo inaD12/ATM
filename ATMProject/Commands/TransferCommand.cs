@@ -5,9 +5,9 @@ namespace ATMProject.Commands
 {
 	internal class TransferCommand : ICommand
 	{
-		private readonly Bank _bank;
+		private readonly IBank _bank;
 
-		public TransferCommand(Bank bank)
+		public TransferCommand(IBank bank)
 		{
 			_bank = bank;
 		}

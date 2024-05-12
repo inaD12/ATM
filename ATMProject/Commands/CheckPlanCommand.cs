@@ -5,8 +5,8 @@ namespace ATMProject.Commands
 {
 	internal class CheckPlanCommand : ICommand
 	{
-		private readonly Bank _bank;
-		public CheckPlanCommand(Bank bank)
+		private readonly IBank _bank;
+		public CheckPlanCommand(IBank bank)
 		{
 			_bank = bank;
 		}

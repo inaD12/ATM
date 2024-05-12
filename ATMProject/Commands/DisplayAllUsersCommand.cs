@@ -6,9 +6,9 @@ namespace ATMProject.Commands
 {
 	internal class DisplayAllUsersCommand : ICommand
 	{
-		private readonly Bank _bank;
+		private readonly IBank _bank;
 
-        public DisplayAllUsersCommand(Bank bank)
+        public DisplayAllUsersCommand(IBank bank)
         {
             _bank = bank;
         }

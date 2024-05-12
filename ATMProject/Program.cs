@@ -26,7 +26,7 @@ namespace ATMProject
 
 			while (true)
 			{
-				commandManager.ScanAndHandleCommands();
+				commandManager.Scan();
 			}
 		}
 	}

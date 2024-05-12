@@ -225,7 +225,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Bank.cs" />
-    <Compile Include="CommandPrinter.cs" />
+    <Compile Include="Helpers\CommandPrinter.cs" />
     <Compile Include="CommandManager.cs" />
     <Compile Include="Commands\CheckPlanCommand.cs" />
     <Compile Include="Commands\CreateUserCommand.cs" />
@@ -235,28 +235,29 @@
     <Compile Include="Commands\TransferCommand.cs" />
     <Compile Include="Commands\ViewBalanceCommand.cs" />
     <Compile Include="Commands\WithdrawCommand.cs" />
-    <Compile Include="DependencyInjection.cs" />
+    <Compile Include="Helpers\DependencyInjection.cs" />
     <Compile Include="Commands\EndCommand.cs" />
-    <Compile Include="Factories\ITaxPlanFactory.cs" />
-    <Compile Include="Factories\IUserFactory.cs" />
+    <Compile Include="Interfaces\ITaxPlanFactory.cs" />
+    <Compile Include="Interfaces\IUserFactory.cs" />
     <Compile Include="Factories\TaxPlanFactory.cs" />
     <Compile Include="Factories\UserFactory.cs" />
+    <Compile Include="Interfaces\IBank.cs" />
     <Compile Include="Interfaces\ICommand.cs" />
     <Compile Include="Interfaces\IUserRepository.cs" />
     <Compile Include="Jobs\MonthlyJob.cs" />
-    <Compile Include="TaxCalculators\ITaxCalculator.cs" />
-    <Compile Include="TaxCalculators\IWithdrawalTaxManager.cs" />
+    <Compile Include="Interfaces\ITaxCalculator.cs" />
+    <Compile Include="Interfaces\IWithdrawalTaxManager.cs" />
     <Compile Include="TaxCalculators\TaxCalculator.cs" />
     <Compile Include="TaxCalculators\TaxPlans\FivePercentTaxPlan.cs" />
     <Compile Include="TaxCalculators\TaxPlans\TenPercentTaxPlan.cs" />
     <Compile Include="TaxCalculators\TaxPlans\ThreePercentTaxPlan.cs" />
-    <Compile Include="TaxCalculators\TaxPlans\IPercentTaxPlan.cs" />
+    <Compile Include="Interfaces\IPercentTaxPlan.cs" />
     <Compile Include="UserRepository.cs" />
     <Compile Include="Interfaces\IUserManager.cs" />
     <Compile Include="UserManager.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="User.cs" />
+    <Compile Include="Entities\User.cs" />
     <Compile Include="TaxCalculators\WithdrawalTaxManager.cs" />
   </ItemGroup>
   <ItemGroup>

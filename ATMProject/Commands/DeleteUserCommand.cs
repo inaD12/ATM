@@ -5,9 +5,9 @@ namespace ATMProject.Commands
 {
 	internal class DeleteUserCommand : ICommand
 	{
-		private readonly Bank _bank;
+		private readonly IBank _bank;
 
-        public DeleteUserCommand(Bank bank)
+        public DeleteUserCommand(IBank bank)
         {
             _bank = bank;
         }
