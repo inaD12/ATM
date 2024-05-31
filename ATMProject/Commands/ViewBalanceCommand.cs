@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ATMProject.Results;
+using System;
 using System.Collections.Generic;
 
 namespace ATMProject.Commands
@@ -11,16 +12,19 @@ namespace ATMProject.Commands
 		{
 			_bank = bank;
 		}
-		public void Execute(List<string> parameters)
+		public Result Execute(List<string> parameters)
 		{
 			if (parameters.Count != 1)
 			{
-				throw new ArgumentException("Invalid parameters!");
+				return Result.Failure("Invalid parameters!");
 			}
 
-			decimal balance = _bank.ViewBalance(parameters[0]);
+			Result res = _bank.ViewBalance(parameters[0]);
 
-			Console.WriteLine($"{parameters[0]}'s balance is {balance}");
+			if (res.IsFailure)
+				return res;
+
+			return Result.Success($"{parameters[0]}'s balance is {(decimal)res.Object}");
         }
 	}
 }

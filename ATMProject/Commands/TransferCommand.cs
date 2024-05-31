@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ATMProject.Results;
+using System;
 using System.Collections.Generic;
 
 namespace ATMProject.Commands
@@ -11,18 +12,21 @@ namespace ATMProject.Commands
 		{
 			_bank = bank;
 		}
-		public void Execute(List<string> parameters)
+		public Result Execute(List<string> parameters)
 		{
 			decimal amount = 0;
 
 			if (parameters.Count != 3 || !decimal.TryParse(parameters[2], out amount))
 			{
-				throw new ArgumentException("Invalid parameters!");
+				return Result.Failure("Invalid parameters!");
 			}
 
-			decimal tax = _bank.TransferMoney(parameters[0], parameters[1], amount);
+			Result res = _bank.TransferMoney(parameters[0], parameters[1], amount);
 
-            Console.WriteLine($"{amount} has been transfered from '{parameters[0]}' to '{parameters[1]}' and a tax of {tax} was taken!");
+			if (res.IsFailure)
+				return res;
+
+           return Result.Success($"{amount} has been transfered from '{parameters[0]}' to '{parameters[1]}' and a tax of {(decimal)res.Object} was taken!");
         }
 	}
 }

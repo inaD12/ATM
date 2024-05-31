@@ -1,9 +1,10 @@
 ﻿using System.Collections.Generic;
+using ATMProject.Results;
 
 namespace ATMProject
 {
 	internal interface ICommand
 	{
-		void Execute(List<string> parameters);
+		Result Execute(List<string> parameters);
 	}
 }

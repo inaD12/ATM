@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ATMProject.Results;
+using System;
 using System.Collections.Generic;
 
 namespace ATMProject.Commands
@@ -11,16 +12,16 @@ namespace ATMProject.Commands
         {
             _bank = bank;
         }
-        public void Execute(List<string> parameters)
+        public Result Execute(List<string> parameters)
 		{
 			if (parameters.Count != 1)
 			{
-				throw new ArgumentException("Invalid parameters!");
+				return Result.Failure("Invalid parameters!");
 			}
 
 			_bank.RemoveUser(parameters[0]);
 
-            Console.WriteLine($"User {parameters[0]} successfully deleted!");
+            return Result.Success($"User {parameters[0]} successfully deleted!");
         }
 	}
 }

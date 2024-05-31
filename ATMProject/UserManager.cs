@@ -1,4 +1,6 @@
-﻿namespace ATMProject.Factories
+﻿using ATMProject.Results;
+
+namespace ATMProject.Factories
 {
 	internal class UserManager : IUserManager
 	{
@@ -32,28 +34,32 @@
 			user.Balance += interest;
 		}
 
-		public void WithdrawMoney(User user, decimal amount)
+		public Result WithdrawMoney(User user, decimal amount)
 		{
 			if(amount <= 0)
 			{
-				throw new System.ArgumentException("You can't withdraw an amount equal to or lower than zero!");
+				return Result.Failure("You can't withdraw an amount equal to or lower than zero!");
 			}
 			if (user.Balance - amount < 0)
 			{
-				throw new System.InvalidOperationException($"User '{user.Name}' only has a balance of {user.Balance}!");
+				return Result.Failure($"User '{user.Name}' only has a balance of {user.Balance}!");
 			}
 
 			user.Balance -= amount;
 			user.WithdrawsForThisMonth++;
+
+			return Result.Success();
 		}
 
-		public void DepositMoney(User user, decimal amount)
+		public Result DepositMoney(User user, decimal amount)
 		{
 			if (amount <= 0)
 			{
-				throw new System.ArgumentException("You can't deposit an amount equal to or lower than zero!");
+				return Result.Failure("You can't deposit an amount equal to or lower than zero!");
 			}
 			user.Balance += amount;
+
+			return Result.Success();
 		}
 
 		public decimal ViewBalance(User user)

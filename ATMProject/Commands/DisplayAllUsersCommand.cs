@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ATMProject.Results;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -12,18 +13,18 @@ namespace ATMProject.Commands
         {
             _bank = bank;
         }
-        public void Execute(List<string> parameters)
+        public Result Execute(List<string> parameters)
 		{
 			IEnumerable<User> users = _bank.GetUsers();
 
             if(users.Any())
             {
-            Console.WriteLine($"All users in the system: {string.Join(", ", users.Select(user => user.Name))}");
+                return Result.Success($"All users in the system: {string.Join(", ", users.Select(user => user.Name))}");
             }
             else
             {
-                Console.WriteLine("No users in the system!");
+                return Result.Failure("No users in the system!");
             }
-        }
+		}
 	}
 }

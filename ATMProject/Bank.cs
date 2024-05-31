@@ -1,4 +1,5 @@
 ﻿using ATMProject.Factories;
+using ATMProject.Results;
 using System.Collections.Generic;
 
 namespace ATMProject
@@ -31,44 +32,84 @@ namespace ATMProject
 			_userRepository.RemoveUser(name);
 		}
 
-		public decimal WithdrawMoney(string name, decimal requestedAmount)
+		public Result WithdrawMoney(string name, decimal requestedAmount)
 		{
-			User user = GetUserByName(name);
+			Result res = GetUserByName(name);
+
+			if (res.IsFailure)
+			{
+				return res;
+			}
 
 			decimal tax = _withdrawalTaxManager.CalculateTax(requestedAmount);
 
-			_userManager.WithdrawMoney(user, requestedAmount + tax);
+			Result managerRes = _userManager.WithdrawMoney((User)res.Object, requestedAmount + tax);
 
-			return tax;
+			if (managerRes.IsFailure)
+			{
+				return managerRes;
+			}
+
+			return Result.Success(obj: tax);
 		}
 
-		public decimal ViewBalance(string name)
+		public Result ViewBalance(string name)
 		{
-			User user = GetUserByName(name);
+			Result res = GetUserByName(name);
 
-			return _userManager.ViewBalance(user);
+			if (res.IsFailure)
+			{
+				return res;
+			}
+
+			decimal balance = _userManager.ViewBalance((User)res.Object);
+
+			return Result.Success(obj: balance);
 		}
 
-		public void DepositMoney(string name, decimal amount)
+		public Result DepositMoney(string name, decimal amount)
 		{
-			User user = GetUserByName(name);
+			Result res = GetUserByName(name);
 
-			_userManager.DepositMoney(user, amount);
+			if (res.IsFailure)
+			{
+				return res;
+			}
+
+			return _userManager.DepositMoney((User)res.Object, amount);
 		}
 
-		public decimal TransferMoney(string nameFrom, string nameTo, decimal amount)
+		public Result TransferMoney(string nameFrom, string nameTo, decimal amount)
 		{
-			decimal tax = WithdrawMoney(nameFrom, amount);
-			DepositMoney(nameFrom, amount);
+			Result withdrawRes = WithdrawMoney(nameFrom, amount);
 
-			return tax;
+			if (withdrawRes.IsFailure) 
+			{
+				return withdrawRes;
+			}
+
+			Result depositRes = DepositMoney(nameTo, amount);
+
+			if (depositRes.IsFailure)
+			{
+				return depositRes;
+			}
+
+			return withdrawRes;
 		}
 
-		public (PlanType, int) CheckPlanType(string name)
+		public Result CheckPlanType(string name)
 		{
-			User user = GetUserByName(name);
+			Result res = GetUserByName(name);
 
-			return (user.Plan, user.WithdrawsForThisMonth);
+			if (res.IsFailure)
+			{
+				return res;
+			}
+
+			User user = (User)res.Object;
+
+			return Result.Success(obj:(user.Plan, user.WithdrawsForThisMonth));
 		}
 
 		public void ApplyMonthlyInterest()
@@ -85,7 +126,7 @@ namespace ATMProject
 			DoSomethingToAllUsers(action);
 		}
 
-		private User GetUserByName(string name)
+		private Result GetUserByName(string name)
 		{
 			return _userRepository.FindUserByName(name);
 		}

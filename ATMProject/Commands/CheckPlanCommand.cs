@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ATMProject.Results;
+using System;
 using System.Collections.Generic;
 
 namespace ATMProject.Commands
@@ -10,16 +11,16 @@ namespace ATMProject.Commands
 		{
 			_bank = bank;
 		}
-		public void Execute(List<string> parameters)
+		public Result Execute(List<string> parameters)
 		{
 			if (parameters.Count != 1)
 			{
-				throw new ArgumentException("Invalid parameters!");
+				return Result.Failure("Invalid parameters!");
 			}
 
-			(PlanType, int) PlanAndWithdrawelsForThisMonth =_bank.CheckPlanType(parameters[0]);
+			(PlanType, int) PlanAndWithdrawelsForThisMonth = ((PlanType, int))_bank.CheckPlanType(parameters[0]).Object;
 
-			Console.WriteLine($"{parameters[0]}'s current plan is {PlanAndWithdrawelsForThisMonth.Item1} and their total withdrawals for this month is {PlanAndWithdrawelsForThisMonth.Item2}!");
+			return Result.Success($"{parameters[0]}'s current plan is {PlanAndWithdrawelsForThisMonth.Item1} and their total withdrawals for this month is {PlanAndWithdrawelsForThisMonth.Item2}!");
         }
 	}
 }

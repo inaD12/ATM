@@ -1,4 +1,6 @@
-﻿using System;
+﻿using ATMProject.Interfaces;
+using ATMProject.Results;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -9,19 +11,21 @@ namespace ATMProject
 	{
 		private Dictionary<string, Type> _commands = new Dictionary<string, Type>();
 		private readonly IServiceProvider _serviceProvider;
+		private readonly IConsoleManager _consoleManager;
 
-		public CommandManager(IServiceProvider serviceProvider)
+		public CommandManager(IServiceProvider serviceProvider, IConsoleManager consoleWriter)
 		{
 			_serviceProvider = serviceProvider;
+			_consoleManager = consoleWriter;
 		}
 
 		public void Scan()
 		{
-            Console.WriteLine("");
+			_consoleManager.WriteEmptyLine();
 
             string input = Console.ReadLine();
 
-			Console.Clear();
+			_consoleManager.ClearConsole();
 
 			CommandPrinter.PrintAllCommands();
 
@@ -56,26 +60,26 @@ namespace ATMProject
 		{
 			if (string.IsNullOrEmpty(commandName))
 			{
-				Console.WriteLine("Command name cannot be null or empty.");
+				_consoleManager.WriteError("Command name cannot be null or empty.");
 				return;
 			}
 
 			if (!_commands.TryGetValue($"{commandName}Command", out Type commandType))
 			{
-				Console.WriteLine($"Command not found: {commandName}");
+				_consoleManager.WriteError($"Command not found: {commandName}");
 				return;
 			}
 
 			if (!typeof(ICommand).IsAssignableFrom(commandType))
 			{
-				Console.WriteLine($"Type {commandType} does not implement ICommand interface.");
+				_consoleManager.WriteError($"Type {commandType} does not implement ICommand interface.");
 				return;
 			}
 
 			var constructor = commandType.GetConstructors().FirstOrDefault();
 			if (constructor == null)
 			{
-				Console.WriteLine($"Command {commandName} does not have a public constructor.");
+				_consoleManager.WriteError($"Command {commandName} does not have a public constructor.");
 				return;
 			}
 
@@ -86,17 +90,23 @@ namespace ATMProject
 			var command = Activator.CreateInstance(commandType, dependencies) as ICommand;
 			if (command == null)
 			{
-				Console.WriteLine($"Failed to instantiate command: {commandName}");
+				_consoleManager.WriteError($"Failed to instantiate command: {commandName}");
 				return;
 			}
 
 			try
 			{
-				command.Execute(parameters);
+				Result res = command.Execute(parameters);
+
+				if (res.IsFailure)
+					_consoleManager.WriteError(res.Description);
+				else
+					_consoleManager.WriteInfo(res.Description);
+
 			}
 			catch (Exception ex)
 			{
-				Console.WriteLine($"Error executing command {commandName}: {ex.Message}");
+				_consoleManager.WriteError($"Error executing command {commandName}: {ex.Message}");
 			}
 		}
 	}

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using ATMProject.Results;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace ATMProject.Factories
@@ -9,45 +10,54 @@ namespace ATMProject.Factories
 
 		public IEnumerable<User> GetUsers { get { return Users; } }
 
-		public void AddUser(User user)
+		public Result AddUser(User user)
 		{
 			if (Users.Any(usr => usr.Name == user.Name))
 			{
-				throw new System.ArgumentException($"A user with the name '{user.Name}' already exists!");
+				return Result.Failure($"A user with the name '{user.Name}' already exists!");
 			}
 
 			Users.Add(user);
+
+			return Result.Success();
 		}
 
-		public void RemoveUser(string name)
+		public Result RemoveUser(string name)
 		{
-			User user = FindUserByName(name);
+			Result res = FindUserByName(name);
 
-			Users.Remove(user);
+			if (res.IsFailure)
+			{
+				return res;
+			}
+
+			Users.Remove((User)res.Object);
+
+			return Result.Success();
 		}
 
-		public User FindUserByName(string name)
+		public Result FindUserByName(string name)
 		{
 			User user = Users.FirstOrDefault(usr => usr.Name == name);
 
 			if (user == null)
 			{
-				throw new System.ArgumentException($"A user with the name '{name}' doesn't exist!");
+				return Result.Failure($"A user with the name '{name}' doesn't exist!");
 			}
 
-			return user;
+			return Result.Success(obj: user);
 		}
 
-		public User FindUserById(string id)
+		public Result FindUserById(string id)
 		{
 			User user = Users.FirstOrDefault(usr => usr.UserId == id);
 
 			if (user == null)
 			{
-				throw new System.ArgumentException($"A user with the id '{id}' doesn't exist!");
+				return Result.Failure($"A user with the id '{id}' doesn't exist!");
 			}
 
-			return user;
+			return Result.Success(obj: user);
 		}
 	}
 }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using ATMProject.Results;
+using System.Collections.Generic;
 
 namespace ATMProject.Factories
 {
@@ -6,9 +7,9 @@ namespace ATMProject.Factories
 	{
 		IEnumerable<User> GetUsers { get; }
 
-		void AddUser(User user);
-		void RemoveUser(string name);
-		User FindUserByName(string name);
-		User FindUserById(string id);
+		Result AddUser(User user);
+		Result RemoveUser(string name);
+		Result FindUserByName(string name);
+		Result FindUserById(string id);
 	}
 }
