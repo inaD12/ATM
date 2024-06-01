@@ -1,5 +1,4 @@
 ﻿using ATMProject.Results;
-using System;
 using System.Collections.Generic;
 
 namespace ATMProject.Commands
@@ -16,7 +15,7 @@ namespace ATMProject.Commands
 		{
 			if (parameters.Count != 1)
 			{
-				return Result.Failure("Invalid parameters!");
+				return Result.Failure(Strings.InvalidParams);
 			}
 
 			Result res = _bank.ViewBalance(parameters[0]);

@@ -22,11 +22,12 @@ namespace ATMProject
 
 		public void Scan()
 		{
-			_consoleManager.WriteEmptyLine();
 			string input = _consoleManager.ReadLine();
 			_consoleManager.ClearConsole();
-			CommandPrinter.PrintAllCommands();
+			_consoleManager.PrintAllCommands();
 			HandleCommand(input);
+
+			Scan();
 		}
 
 		public void DiscoverCommands()

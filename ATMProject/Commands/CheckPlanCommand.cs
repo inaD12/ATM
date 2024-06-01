@@ -1,5 +1,4 @@
 ﻿using ATMProject.Results;
-using System;
 using System.Collections.Generic;
 
 namespace ATMProject.Commands
@@ -15,7 +14,7 @@ namespace ATMProject.Commands
 		{
 			if (parameters.Count != 1)
 			{
-				return Result.Failure("Invalid parameters!");
+				return Result.Failure(Strings.InvalidParams);
 			}
 
 			(PlanType, int) PlanAndWithdrawelsForThisMonth = ((PlanType, int))_bank.CheckPlanType(parameters[0]).Object;

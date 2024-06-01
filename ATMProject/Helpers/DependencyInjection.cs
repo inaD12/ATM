@@ -10,7 +10,7 @@ using System.Reflection;
 
 namespace ATMProject.Commands
 {
-	public static class DependencyInjection
+    public static class DependencyInjection
 	{
 		public static void ConfigureServices(IServiceCollection services)
 		{
@@ -35,6 +35,7 @@ namespace ATMProject.Commands
 				services.AddTransient(type);
 			}
 
+			services.AddHangfireServer();
 
 			services.AddHangfire(x => x
 				.SetDataCompatibilityLevel(CompatibilityLevel.Version_180)
@@ -43,7 +44,6 @@ namespace ATMProject.Commands
 				.UseMemoryStorage()
 			);
 
-			services.AddHangfireServer();
 
 			services.AddHostedService<HangfireHostedService>();
 		}

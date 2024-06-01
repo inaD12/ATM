@@ -1,5 +1,4 @@
 ﻿using ATMProject.Results;
-using System;
 using System.Collections.Generic;
 
 namespace ATMProject.Commands
@@ -18,7 +17,7 @@ namespace ATMProject.Commands
 
 			if (parameters.Count != 3 || !decimal.TryParse(parameters[2], out amount))
 			{
-				return Result.Failure("Invalid parameters!");
+				return Result.Failure(Strings.InvalidParams);
 			}
 
 			Result res = _bank.TransferMoney(parameters[0], parameters[1], amount);

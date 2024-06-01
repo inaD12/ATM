@@ -7,5 +7,6 @@
 		void WriteEmptyLine();
 		void ClearConsole();
 		string ReadLine();
+		void PrintAllCommands();
 	}
 }

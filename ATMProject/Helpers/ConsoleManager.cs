@@ -10,6 +10,7 @@ namespace ATMProject.Helpers
 			Console.ForegroundColor = ConsoleColor.Green;
 			Console.WriteLine($"{message}");
 			Console.ResetColor();
+			WriteEmptyLine();
 		}
 
 		public void WriteError(string message)
@@ -17,6 +18,7 @@ namespace ATMProject.Helpers
 			Console.ForegroundColor = ConsoleColor.Red;
 			Console.WriteLine($"{message}");
 			Console.ResetColor();
+			WriteEmptyLine();
 		}
 
 		public void WriteEmptyLine()
@@ -33,5 +35,10 @@ namespace ATMProject.Helpers
 		{
 			return Console.ReadLine();
 		}
+
+		public void PrintAllCommands()
+		{
+            Console.WriteLine(Strings.AllCommands);
+        }
 	}
 }

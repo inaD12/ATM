@@ -2,9 +2,9 @@
 
 namespace ATMProject
 {
-	public static class CommandPrinter
+	public static class Strings
 	{
-		private const string AllCommands =
+		public const string AllCommands =
 @"Commands:
 CreateUser {username} {wallet balance} - Creates a user
 DeleteUser {username} - Deletes a user
@@ -16,10 +16,6 @@ Transfer {username of transferer} {username of receiver} {amount to transfer} - 
 CheckPlan {username} - Displays the current plan of the user
 End - Stops the program.
 ";
-
-		public static void PrintAllCommands()
-		{
-            Console.WriteLine(AllCommands);
-        }
+		public const string InvalidParams = "Invalid parameters!";
 	}
 }

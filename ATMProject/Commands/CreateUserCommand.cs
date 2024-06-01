@@ -1,5 +1,4 @@
 ﻿using ATMProject.Results;
-using System;
 using System.Collections.Generic;
 
 namespace ATMProject.Commands
@@ -17,7 +16,7 @@ namespace ATMProject.Commands
 
 			if (parameters.Count != 2 || !decimal.TryParse(parameters[1], out amount))
 			{
-				return Result.Failure("Invalid parameters!");
+				return Result.Failure(Strings.InvalidParams);
 			}
 
 			_bank.CreateUser(parameters[0], amount);
