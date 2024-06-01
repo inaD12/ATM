@@ -53,7 +53,7 @@ namespace ATMProject
 			}
 
 			List<string> wordList = new List<string>(words);
-			string command = words[0].ToLower();
+			string command = words[0];
 			List<string> parameters = wordList.Skip(1).ToList();
 
 			ExecuteCommand(command, parameters);
@@ -61,7 +61,7 @@ namespace ATMProject
 
 		private void ExecuteCommand(string commandName, List<string> parameters)
 		{
-			if (!_commands.TryGetValue($"{commandName}command", out Type commandType))
+			if (!_commands.TryGetValue($"{commandName.ToLower()}command", out Type commandType))
 			{
 				_consoleManager.WriteError($"Command not found: {commandName}");
 				return;
