@@ -10,7 +10,7 @@ using System.Reflection;
 
 namespace ATMProject.Commands
 {
-    public static class DependencyInjection
+    public static class ServiceConfigurator
 	{
 		public static void ConfigureServices(IServiceCollection services)
 		{
@@ -18,7 +18,7 @@ namespace ATMProject.Commands
 			services.AddSingleton<IUserRepository, UserRepository>();
 			services.AddTransient<IUserManager, UserManager>();
 			services.AddTransient<IUserFactory, UserFactory>();
-			services.AddTransient<CommandManager>();
+			services.AddTransient<ICommandManager, CommandManager>();
 			services.AddTransient<IWithdrawalTaxManager, WithdrawalTaxManager>();
 			services.AddTransient<ITaxCalculator, TaxCalculator>();
 			services.AddTransient<ITaxPlanFactory, TaxPlanFactory>();

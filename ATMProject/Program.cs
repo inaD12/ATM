@@ -21,7 +21,7 @@ namespace ATMProject
 				})
 				.ConfigureServices(services => 
 				{
-					DependencyInjection.ConfigureServices(services);
+					ServiceConfigurator.ConfigureServices(services);
 				})
 				.Build();
 

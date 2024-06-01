@@ -17,7 +17,12 @@ namespace ATMProject.Commands
 				return Result.Failure(Strings.InvalidParams);
 			}
 
-			(PlanType, int) PlanAndWithdrawelsForThisMonth = ((PlanType, int))_bank.CheckPlanType(parameters[0]).Object;
+			Result res = _bank.CheckPlanType(parameters[0]);
+
+			if (res.IsFailure)
+				return res;
+
+			(PlanType, int) PlanAndWithdrawelsForThisMonth = ((PlanType, int))res.Object;
 
 			return Result.Success($"{parameters[0]}'s current plan is {PlanAndWithdrawelsForThisMonth.Item1} and their total withdrawals for this month is {PlanAndWithdrawelsForThisMonth.Item2}!");
         }

@@ -8,7 +8,7 @@ using System.Reflection;
 
 namespace ATMProject
 {
-	public class CommandManager
+    public class CommandManager : ICommandManager
 	{
 		private readonly Dictionary<string, Type> _commands = new Dictionary<string, Type>();
 		private readonly IServiceProvider _serviceProvider;
