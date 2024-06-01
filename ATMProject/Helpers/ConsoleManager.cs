@@ -28,5 +28,10 @@ namespace ATMProject.Helpers
 		{
 			Console.Clear(); 
 		}
+
+		public string ReadLine()
+		{
+			return Console.ReadLine();
+		}
 	}
 }

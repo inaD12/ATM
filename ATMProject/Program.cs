@@ -2,7 +2,9 @@
 using ATMProject.Jobs;
 using Hangfire;
 using Hangfire.MemoryStorage;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 
 namespace ATMProject
 {
@@ -10,24 +12,37 @@ namespace ATMProject
 	{
 		static void Main(string[] args)
 		{
-			ServiceProvider serviceProvider = DependencyInjection.ConfigureServices();
+			//ServiceProvider serviceProvider = DependencyInjection.ConfigureServices();
 
-			GlobalConfiguration.Configuration.UseMemoryStorage();
+			//GlobalConfiguration.Configuration.UseMemoryStorage();
 
-			CommandManager commandManager = serviceProvider.GetService<CommandManager>();
+			//CommandManager commandManager = serviceProvider.GetService<CommandManager>();
 
-			MonthlyJob ser = serviceProvider.GetService<MonthlyJob>();
+			//MonthlyJob ser = serviceProvider.GetService<MonthlyJob>();
 
-			RecurringJob.AddOrUpdate("MonthlyJob",() => ser.Execute(), Cron.Monthly);
+			//RecurringJob.AddOrUpdate("MonthlyJob",() => ser.Execute(), Cron.Monthly);
 
-			commandManager.DiscoverCommands();
+			//commandManager.DiscoverCommands();
 
-			CommandPrinter.PrintAllCommands();
+			//CommandPrinter.PrintAllCommands();
 
-			while (true)
-			{
-				commandManager.Scan();
-			}
+			//while (true)
+			//{
+			//	commandManager.Scan();
+			//}
+
+			var builder = new ConfigurationBuilder();
+
+			var host = Host.CreateDefaultBuilder()
+				.ConfigureServices(services => 
+				{
+					DependencyInjection.ConfigureServices(services);
+				})
+				.Build();
+
+			var bootstrapper = ActivatorUtilities.CreateInstance<Bootstrapper>(host.Services);
+
+			bootstrapper.Run();
 		}
 	}
 }

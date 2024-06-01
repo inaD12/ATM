@@ -5,15 +5,15 @@ using ATMProject.Jobs;
 using Hangfire;
 using Hangfire.MemoryStorage;
 using Microsoft.Extensions.DependencyInjection;
+using System.Linq;
+using System.Reflection;
 
 namespace ATMProject.Commands
 {
 	public static class DependencyInjection
 	{
-		public static ServiceProvider ConfigureServices()
+		public static void ConfigureServices(IServiceCollection services)
 		{
-			ServiceCollection services = new ServiceCollection();
-
 			services.AddSingleton<IBank, Bank>();
 			services.AddSingleton<IUserRepository, UserRepository>();
 			services.AddTransient<IUserManager, UserManager>();
@@ -24,17 +24,29 @@ namespace ATMProject.Commands
 			services.AddTransient<ITaxPlanFactory, TaxPlanFactory>();
 			services.AddTransient<MonthlyJob>();
 			services.AddTransient<IConsoleManager, ConsoleManager>();
+			services.AddTransient<Bootstrapper>();
+
+
+			var commandTypes = Assembly.GetExecutingAssembly().GetTypes()
+								   .Where(t => typeof(ICommand).IsAssignableFrom(t) && !t.IsInterface);
+
+			foreach (var type in commandTypes)
+			{
+				services.AddTransient(type);
+			}
+
 
 			services.AddHangfire(x => x
-			.SetDataCompatibilityLevel(CompatibilityLevel.Version_180)
-			.UseSimpleAssemblyNameTypeSerializer()
-			.UseRecommendedSerializerSettings()
-			.UseMemoryStorage()
+				.SetDataCompatibilityLevel(CompatibilityLevel.Version_180)
+				.UseSimpleAssemblyNameTypeSerializer()
+				.UseRecommendedSerializerSettings()
+				.UseMemoryStorage()
 			);
 
 			services.AddHangfireServer();
 
-			return services.BuildServiceProvider();
+			services.AddHostedService<HangfireHostedService>();
 		}
 	}
+
 }

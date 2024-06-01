@@ -1,5 +1,6 @@
 ﻿using ATMProject.Interfaces;
 using ATMProject.Results;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,26 +10,22 @@ namespace ATMProject
 {
 	public class CommandManager
 	{
-		private Dictionary<string, Type> _commands = new Dictionary<string, Type>();
+		private readonly Dictionary<string, Type> _commands = new Dictionary<string, Type>();
 		private readonly IServiceProvider _serviceProvider;
 		private readonly IConsoleManager _consoleManager;
 
-		public CommandManager(IServiceProvider serviceProvider, IConsoleManager consoleWriter)
+		public CommandManager(IServiceProvider serviceProvider, IConsoleManager consoleManager)
 		{
 			_serviceProvider = serviceProvider;
-			_consoleManager = consoleWriter;
+			_consoleManager = consoleManager;
 		}
 
 		public void Scan()
 		{
 			_consoleManager.WriteEmptyLine();
-
-            string input = Console.ReadLine();
-
+			string input = _consoleManager.ReadLine();
 			_consoleManager.ClearConsole();
-
 			CommandPrinter.PrintAllCommands();
-
 			HandleCommand(input);
 		}
 
@@ -36,6 +33,7 @@ namespace ATMProject
 		{
 			var commandTypes = Assembly.GetExecutingAssembly().GetTypes()
 									   .Where(t => typeof(ICommand).IsAssignableFrom(t) && !t.IsInterface);
+
 			foreach (var type in commandTypes)
 			{
 				string commandName = $"{type.Name}";
@@ -47,62 +45,49 @@ namespace ATMProject
 		{
 			string[] words = input.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
 
-			List<string> wordList = new List<string>(words);
-
-			string command = words[0];
-
-			List<string> parameters = wordList.Skip(1).ToList();
-
-			ExecuteCommand(command, parameters, _serviceProvider);
-		}
-
-		private void ExecuteCommand(string commandName, List<string> parameters, IServiceProvider serviceProvider)
-		{
-			if (string.IsNullOrEmpty(commandName))
+			if (words.Length == 0)
 			{
 				_consoleManager.WriteError("Command name cannot be null or empty.");
 				return;
 			}
 
+			List<string> wordList = new List<string>(words);
+			string command = words[0];
+			List<string> parameters = wordList.Skip(1).ToList();
+
+			ExecuteCommand(command, parameters);
+		}
+
+		private void ExecuteCommand(string commandName, List<string> parameters)
+		{
 			if (!_commands.TryGetValue($"{commandName}Command", out Type commandType))
 			{
 				_consoleManager.WriteError($"Command not found: {commandName}");
 				return;
 			}
 
-			if (!typeof(ICommand).IsAssignableFrom(commandType))
-			{
-				_consoleManager.WriteError($"Type {commandType} does not implement ICommand interface.");
-				return;
-			}
-
-			var constructor = commandType.GetConstructors().FirstOrDefault();
-			if (constructor == null)
-			{
-				_consoleManager.WriteError($"Command {commandName} does not have a public constructor.");
-				return;
-			}
-
-			var dependencies = constructor.GetParameters()
-										   .Select(param => serviceProvider.GetService(param.ParameterType))
-										   .ToArray();
-
-			var command = Activator.CreateInstance(commandType, dependencies) as ICommand;
-			if (command == null)
-			{
-				_consoleManager.WriteError($"Failed to instantiate command: {commandName}");
-				return;
-			}
-
 			try
 			{
-				Result res = command.Execute(parameters);
+				using (var scope = _serviceProvider.CreateScope())
+				{
+					var command = scope.ServiceProvider.GetRequiredService(commandType) as ICommand;
+					if (command == null)
+					{
+						_consoleManager.WriteError($"Failed to instantiate command: {commandName}");
+						return;
+					}
 
-				if (res.IsFailure)
-					_consoleManager.WriteError(res.Description);
-				else
-					_consoleManager.WriteInfo(res.Description);
+					Result res = command.Execute(parameters);
 
+					if (res.IsFailure)
+					{
+						_consoleManager.WriteError(res.Description);
+					}
+					else
+					{
+						_consoleManager.WriteInfo(res.Description);
+					}
+				}
 			}
 			catch (Exception ex)
 			{

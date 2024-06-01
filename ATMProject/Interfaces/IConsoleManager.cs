@@ -6,5 +6,6 @@
 		void WriteError(string message);
 		void WriteEmptyLine();
 		void ClearConsole();
+		string ReadLine();
 	}
 }
